@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # Serveur de Tracking MLflow Local
+  # ============================================================================
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.15.1
+    container_name: mlflow-server
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=sqlite:////mlflow/mlflow.db
+      - MLFLOW_DEFAULT_ARTIFACT_ROOT=/mlflow/artifacts
+    volumes:
+      - ./mlruns:/mlflow
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --default-artifact-root /mlflow/artifacts
+      --host 0.0.0.0
+      --port 5000
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - rag-network
+
+  # ============================================================================
+  # Application RAG Monolithique & Sécurité RBAC (Connectée à Ollama)
+  # ============================================================================
+  rag-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag-monolith-app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - CHROMA_PERSIST_DIRECTORY=/app/vector_store
+      - DATA_DIRECTORY=/app/data
+      # Connexion à l'instance Ollama tournant sur la machine hôte
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_MODEL=llama3.2
+      - LOG_LEVEL=INFO
+    extra_hosts:
+      # Permet au conteneur Docker d'accéder au serveur Ollama de Windows via host.docker.internal
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Montages locaux pour développement à chaud
+      - ./src:/app/src
+      - ./data:/app/data:ro
+      - ./vector_store:/app/vector_store
+    depends_on:
+      mlflow:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - rag-network
+
+networks:
+  rag-network:
+    driver: bridge

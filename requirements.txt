@@ -1,0 +1,47 @@
+# ==============================================================================
+# PIPELINE RAG MULTI-SOURCES & SÉCURITÉ DOCUMENTAIRE (RBAC) - MLOps REQUIREMENTS
+# ==============================================================================
+
+# --- Orchestration RAG & LLM Local (Ollama) ---
+langchain>=0.2.14
+langchain-community>=0.2.12
+langchain-core>=0.2.35
+langchain-text-splitters>=0.2.2
+langchain-ollama>=0.1.0
+ollama>=0.3.0
+
+# --- Vector Store Monolithique (Unique Index & Pre-filtering) ---
+chromadb>=0.5.5
+langchain-chroma>=0.1.2
+
+# --- Embeddings sémantiques (Modèles locaux / Hugging Face / Ollama) ---
+sentence-transformers>=3.0.1
+langchain-huggingface>=0.0.3
+torch>=2.2.0
+
+# --- Ingestion Multi-Sources (PDF, Markdown, FAQ) ---
+pypdf>=4.3.1
+markdown>=3.6
+beautifulsoup4>=4.12.3
+pandas>=2.2.2
+openpyxl>=3.1.5
+
+# --- MLOps : Expérimentation, Tracking & Versionnement ---
+mlflow>=2.15.1
+dvc>=3.53.0
+
+# --- API & Serving (Conteneurisation Docker) ---
+fastapi>=0.112.1
+uvicorn[standard]>=0.30.6
+pydantic>=2.8.2
+python-multipart>=0.0.9
+
+# --- Tests Qualité & Non-Régression (Corpus, Provenance & RBAC) ---
+pytest>=8.3.2
+pytest-cov>=5.0.0
+httpx>=0.27.0
+
+# --- Utilitaires & Configuration ---
+python-dotenv>=1.0.1
+pyyaml>=6.0.2
+tqdm>=4.66.5
