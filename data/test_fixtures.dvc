@@ -1,0 +1,6 @@
+outs:
+- md5: 8289dee463c5358f15e8909a17a7be70.dir
+  size: 8194
+  nfiles: 5
+  hash: md5
+  path: test_fixtures
