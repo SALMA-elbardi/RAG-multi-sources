@@ -20,6 +20,7 @@ langchain-huggingface>=0.0.3
 torch>=2.2.0
 
 # --- Ingestion Multi-Sources (PDF, Markdown, FAQ) ---
+PyMuPDF==2.1
 pypdf>=4.3.1
 markdown>=3.6
 beautifulsoup4>=4.12.3
