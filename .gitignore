@@ -19,5 +19,10 @@ mlruns/
 mlflow_data/
 *.db
 
+# Logs & Monitoring
+logs/*.jsonl
+logs/*.log
+!logs/.gitkeep
+
 # Secrets & Configuration locale
 .env

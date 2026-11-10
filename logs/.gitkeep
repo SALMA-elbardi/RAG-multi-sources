@@ -1,0 +1,2 @@
+# Garde le dossier logs/ dans le dépôt Git sans committer les fichiers de logs générés en production
+
